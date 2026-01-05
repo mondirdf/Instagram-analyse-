@@ -30,18 +30,13 @@ def scrape_following(username, password, target_username):
             
             # Navigate to target profile
             print(f"📍 Navigating to @{target_username}...")
-            page.goto("https://www.instagram.com/accounts/login/", timeout=60000)
-
-# انتظر حقول تسجيل الدخول فعليًا
-            page.wait_for_selector('input[name="username"]', timeout=60000)
-            page.wait_for_selector('input[name="password"]', timeout=60000)
-
-            page.fill('input[name="username"]', username)
-            page.fill('input[name="password"]', password)
-            page.click('button[type="submit"]')
-
-# انتظر نجاح الدخول (ظهور شريط البحث)
-            page.wait_for_selector('input[placeholder="Search"]', timeout=60000)
+            page.goto(f"https://www.instagram.com/{target_username}/")
+            time.sleep(3)
+            
+            # Click following
+            following_link = page.locator('a[href*="/following/"]').first
+            following_link.click()
+            time.sleep(3)
             
             # Scrape following list
             print("🔍 Scraping following list...")
