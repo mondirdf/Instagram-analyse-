@@ -1,4 +1,58 @@
-               # Get all account elements
+# scraper.py
+# Instagram scraper using Playwright - NO data persistence
+
+from playwright.sync_api import sync_playwright
+import time
+import config
+
+def scrape_following(username, password, target_username):
+    """
+    Scrape following list from Instagram account.
+    Returns list of dicts: {username, bio, category, verified}
+    """
+    following_list = []
+    
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        context = browser.new_context()
+        page = context.new_page()
+        
+        try:
+            # Login
+            print("🔐 Logging into Instagram...")
+            page.goto("https://www.instagram.com/accounts/login/")
+            time.sleep(3)
+            
+            page.fill('input[name="username"]', username)
+            page.fill('input[name="password"]', password)
+            page.click('button[type="submit"]')
+            time.sleep(5)
+            
+            # Navigate to target profile
+            print(f"📍 Navigating to @{target_username}...")
+            page.goto("https://www.instagram.com/accounts/login/", timeout=60000)
+
+# انتظر حقول تسجيل الدخول فعليًا
+            page.wait_for_selector('input[name="username"]', timeout=60000)
+            page.wait_for_selector('input[name="password"]', timeout=60000)
+
+            page.fill('input[name="username"]', username)
+            page.fill('input[name="password"]', password)
+            page.click('button[type="submit"]')
+
+# انتظر نجاح الدخول (ظهور شريط البحث)
+            page.wait_for_selector('input[placeholder="Search"]', timeout=60000)
+            
+            # Scrape following list
+            print("🔍 Scraping following list...")
+            dialog = page.locator('div[role="dialog"]').first
+            
+            # Scroll to load accounts
+            prev_count = 0
+            stale_count = 0
+            
+            while len(following_list) < config.MAX_FOLLOWING_TO_SCRAPE:
+                # Get all account elements
                 accounts = dialog.locator('a[href^="/"][role="link"]').all()
                 
                 for account in accounts:
