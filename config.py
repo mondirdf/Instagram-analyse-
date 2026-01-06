@@ -7,8 +7,8 @@ import os
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyDD9maL73H-iLRwgygRzq7WLtdhfp4UqeA")
 
 # Instagram credentials (for educational use only)
-INSTAGRAM_USERNAME = os.getenv("INSTAGRAM_USERNAME", "mondir.d.f")
-INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD", "NINI11")
+INSTAGRAM_USERNAME = os.getenv("INSTAGRAM_USERNAME", "acount.test.py")
+INSTAGRAM_PASSWORD = os.getenv("INSTAGRAM_PASSWORD", "PYTHON12345")
 
 # Closed taxonomy - DO NOT modify
 ALLOWED_CATEGORIES = [
